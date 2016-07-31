@@ -16,6 +16,7 @@
         android:text="联系客服" />
 
     <RelativeLayout
+        android:id="@+id/conversation_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/contact_kefu"

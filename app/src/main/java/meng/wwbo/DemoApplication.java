@@ -23,8 +23,9 @@ public class DemoApplication extends Application {
         super.onCreate();
         applicationContext = this;
         instance = this;
+        // TODO(mwang): 16/7/31 判断在主进程,防止初始化两次
         EMClient.getInstance().init(this, getDefaultChatOptions());
-        // TODO(mwang): 16/7/30 set debug false in release mode 
+        // TODO(mwang): 16/7/30 set debug false in release mode
         EMClient.getInstance().setDebugMode(true);
     }
 
