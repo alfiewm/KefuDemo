@@ -9,8 +9,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="meng.wwbo.HomeActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/contact_kefu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="联系客服" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contact_kefu"
+        android:background="#00ff99">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="客服"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/last_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:text="请问有什么可以帮您?"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/unread_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:text="99+" />
+    </RelativeLayout>
 </RelativeLayout>
