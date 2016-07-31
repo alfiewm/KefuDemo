@@ -1,4 +1,4 @@
-package meng.wwbo.easeui.utils;
+package meng.customerservice.easeui.utils;
 
 import android.content.Context;
 import android.widget.ImageView;

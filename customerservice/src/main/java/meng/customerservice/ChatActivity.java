@@ -1,10 +1,10 @@
-package meng.wwbo;
+package meng.customerservice;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class ChatActivity extends ActionBarActivity {
+public class ChatActivity extends FragmentActivity {
 
     public static ChatActivity activityInstance;
     private ChatFragment chatFragment;

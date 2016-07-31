@@ -1,4 +1,4 @@
-package meng.wwbo.easeui;
+package meng.customerservice.easeui;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,10 +12,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
-import meng.wwbo.R;
-import meng.wwbo.easeui.chatrow.EaseCustomChatRowProvider;
-import meng.wwbo.easeui.utils.EaseCommonUtils;
-
+import meng.customerservice.R;
+import meng.customerservice.easeui.chatrow.EaseCustomChatRowProvider;
+import meng.customerservice.easeui.utils.EaseCommonUtils;
 
 public class EaseChatMessageList extends RelativeLayout{
     

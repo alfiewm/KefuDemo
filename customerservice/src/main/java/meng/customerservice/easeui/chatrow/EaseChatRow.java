@@ -1,13 +1,4 @@
-package meng.wwbo.easeui.chatrow;
-
-import com.hyphenate.EMCallBack;
-import com.hyphenate.EMError;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessage.Direct;
-import com.hyphenate.util.DateUtils;
-
-import java.util.Date;
+package meng.customerservice.easeui.chatrow;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,10 +11,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import meng.wwbo.R;
-import meng.wwbo.easeui.EaseChatMessageList;
-import meng.wwbo.easeui.EaseMessageAdapter;
-import meng.wwbo.easeui.utils.EaseUserUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessage.Direct;
+import com.hyphenate.util.DateUtils;
+
+import java.util.Date;
+
+import meng.customerservice.R;
+import meng.customerservice.easeui.EaseChatMessageList;
+import meng.customerservice.easeui.EaseMessageAdapter;
+import meng.customerservice.easeui.utils.EaseUserUtils;
 
 public abstract class EaseChatRow extends LinearLayout {
     protected static final String TAG = EaseChatRow.class.getSimpleName();
@@ -296,9 +296,9 @@ public abstract class EaseChatRow extends LinearLayout {
                 if (message.status() == EMMessage.Status.FAIL) {
 
                     if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_invalid_content), 0).show();
+                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), 0).show();
+                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();
                     }
                 }
 

@@ -1,4 +1,4 @@
-package meng.wwbo.easeui.chatrow;
+package meng.customerservice.easeui.chatrow;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,8 @@ import com.hyphenate.util.TextFormater;
 
 import java.io.File;
 
-import meng.wwbo.R;
+import meng.customerservice.R;
+
 
 public class EaseChatRowFile extends EaseChatRow {
 

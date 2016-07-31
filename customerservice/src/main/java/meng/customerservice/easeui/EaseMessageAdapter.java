@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package meng.wwbo.easeui;
+package meng.customerservice.easeui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,13 +26,12 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
-import meng.wwbo.easeui.chatrow.EaseChatRow;
-import meng.wwbo.easeui.chatrow.EaseChatRowFile;
-import meng.wwbo.easeui.chatrow.EaseChatRowImage;
-import meng.wwbo.easeui.chatrow.EaseChatRowText;
-import meng.wwbo.easeui.chatrow.EaseCustomChatRowProvider;
-import meng.wwbo.easeui.utils.EaseCommonUtils;
-
+import meng.customerservice.easeui.chatrow.EaseChatRow;
+import meng.customerservice.easeui.chatrow.EaseChatRowFile;
+import meng.customerservice.easeui.chatrow.EaseChatRowImage;
+import meng.customerservice.easeui.chatrow.EaseChatRowText;
+import meng.customerservice.easeui.chatrow.EaseCustomChatRowProvider;
+import meng.customerservice.easeui.utils.EaseCommonUtils;
 
 public class EaseMessageAdapter extends BaseAdapter{
 

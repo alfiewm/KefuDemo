@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package meng.wwbo.easeui.utils;
+package meng.customerservice.easeui.utils;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -26,7 +26,8 @@ import com.hyphenate.util.EMLog;
 
 import java.util.List;
 
-import meng.wwbo.easeui.EaseConstant;
+import meng.customerservice.easeui.EaseConstant;
+
 
 public class EaseCommonUtils {
 	private static final String TAG = "CommonUtils";

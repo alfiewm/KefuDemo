@@ -1,4 +1,4 @@
-package meng.wwbo.easeui.chatrow;
+package meng.customerservice.easeui.chatrow;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -13,8 +13,9 @@ import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 
-import meng.wwbo.R;
-import meng.wwbo.easeui.utils.EaseSmileUtils;
+import meng.customerservice.R;
+import meng.customerservice.easeui.utils.EaseSmileUtils;
+
 
 public class EaseChatRowText extends EaseChatRow{
 

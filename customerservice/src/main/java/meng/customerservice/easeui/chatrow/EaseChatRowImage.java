@@ -1,4 +1,4 @@
-package meng.wwbo.easeui.chatrow;
+package meng.customerservice.easeui.chatrow;
 
 import android.content.Context;
 import android.view.View;
@@ -12,8 +12,9 @@ import com.hyphenate.chat.EMMessage;
 
 import java.io.File;
 
-import meng.wwbo.R;
-import meng.wwbo.easeui.utils.EaseImageUtils;
+import meng.customerservice.R;
+import meng.customerservice.easeui.utils.EaseImageUtils;
+
 
 public class EaseChatRowImage extends EaseChatRowFile{
 

@@ -1,4 +1,4 @@
-package meng.wwbo.easeui;
+package meng.customerservice.easeui;
 
 /**
  * Created by meng on 16/7/31.

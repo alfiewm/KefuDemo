@@ -17,6 +17,8 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import java.util.Map;
 
+import meng.customerservice.ChatActivity;
+
 public class HomeActivity extends Activity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
 

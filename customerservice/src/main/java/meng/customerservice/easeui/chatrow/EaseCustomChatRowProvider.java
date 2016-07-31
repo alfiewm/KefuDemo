@@ -1,4 +1,4 @@
-package meng.wwbo.easeui.chatrow;
+package meng.customerservice.easeui.chatrow;
 
 import android.widget.BaseAdapter;
 

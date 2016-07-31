@@ -1,4 +1,4 @@
-package meng.wwbo;
+package meng.customerservice;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -27,10 +27,10 @@ import com.hyphenate.chat.EMMessage;
 import java.io.File;
 import java.util.List;
 
-import meng.wwbo.easeui.EaseChatMessageList;
-import meng.wwbo.easeui.EaseConstant;
-import meng.wwbo.easeui.chatrow.EaseCustomChatRowProvider;
-import meng.wwbo.easeui.utils.EaseCommonUtils;
+import meng.customerservice.easeui.EaseChatMessageList;
+import meng.customerservice.easeui.EaseConstant;
+import meng.customerservice.easeui.chatrow.EaseCustomChatRowProvider;
+import meng.customerservice.easeui.utils.EaseCommonUtils;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
     protected InputMethodManager inputMethodManager;

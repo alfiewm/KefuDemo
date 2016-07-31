@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package meng.wwbo.easeui.utils;
+package meng.customerservice.easeui.utils;
 
 import android.content.Context;
 import android.net.Uri;
