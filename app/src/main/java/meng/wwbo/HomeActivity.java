@@ -95,8 +95,13 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         if (conversations.size() < 1) {
             conversationContainer.setVisibility(View.GONE);
         } else {
+            conversationContainer.setVisibility(View.VISIBLE);
             EMConversation kefuCon = conversations.values().iterator().next();
             EMMessage lastMsg = kefuCon.getLastMessage();
+            if (lastMsg == null) {
+                lastMsgView.setText("null");
+                return;
+            }
             if (lastMsg.getType() == EMMessage.Type.IMAGE) {
                 lastMsgView.setText("[图片]");
             } else {
@@ -105,7 +110,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
             }
             if (kefuCon.getUnreadMsgCount() > 0) {
                 unreadCountView.setVisibility(View.VISIBLE);
-                unreadCountView.setText(kefuCon.getUnreadMsgCount());
+                unreadCountView.setText(String.valueOf(kefuCon.getUnreadMsgCount()));
             } else {
                 unreadCountView.setVisibility(View.GONE);
             }

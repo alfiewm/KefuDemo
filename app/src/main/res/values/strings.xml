@@ -3,4 +3,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="send_fail">发送失败</string>
+    <string name="error_send_invalid_content">你发送了不合法的消息内容</string>
+    <string name="connect_failuer_toast">请检查网络或稍候重试</string>
+    <string name="Have_downloaded">已下载</string>
+    <string name="Did_not_download">未下载</string>
+    <string name="not_download">未下载</string>
 </resources>
