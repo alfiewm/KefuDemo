@@ -31,9 +31,11 @@ import meng.customerservice.easeui.EmptyEMMessageListener;
 public class CustomerServiceManager {
     private static final String TAG = CustomerServiceManager.class.getSimpleName();
     private static CustomerServiceManager instance = new CustomerServiceManager();
+
     public static CustomerServiceManager getInstance() {
         return instance;
     }
+
     private Context appContext;
     private Handler mainHandler;
     private EaseNotifier easeNotifier;

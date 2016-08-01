@@ -25,7 +25,8 @@ public class ChatActivity extends FragmentActivity {
         setContentView(R.layout.activity_chat);
         String contextMsg = "";
         if (getIntent().getExtras() != null) {
-            contextMsg = getIntent().getExtras().getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, "");
+            contextMsg = getIntent().getExtras().getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE,
+                    "");
             peerUserId = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID, peerUserId);
         }
         Bundle bundle = new Bundle();

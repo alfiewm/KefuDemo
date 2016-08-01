@@ -19,7 +19,6 @@ import java.io.File;
 
 import meng.customerservice.R;
 
-
 public class EaseChatRowFile extends EaseChatRow {
 
     protected TextView fileNameView;
@@ -118,8 +117,8 @@ public class EaseChatRowFile extends EaseChatRow {
             FileUtils.openFile(file, (Activity) context);
         } else {
             // 下载
-//            context.startActivity(new Intent(context, EaseShowNormalFileActivity.class)
-//                    .putExtra("msgbody", message.getBody()));
+            // context.startActivity(new Intent(context, EaseShowNormalFileActivity.class)
+            // .putExtra("msgbody", message.getBody()));
         }
         if (message.direct() == EMMessage.Direct.RECEIVE && !message.isAcked()
                 && message.getChatType() == ChatType.Chat) {
