@@ -3,21 +3,17 @@ package meng.wwbo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
-
-import java.util.Map;
 
 import meng.customerservice.ChatActivity;
+import meng.customerservice.CustomerServiceManager;
+import meng.customerservice.easeui.utils.EaseCommonUtils;
 
 public class HomeActivity extends Activity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -37,8 +33,8 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         unreadCountView = (TextView) findViewById(R.id.unread_count);
         btnContactKefu.setOnClickListener(this);
         conversationContainer.setOnClickListener(this);
-        if (!EMClient.getInstance().isLoggedInBefore()) {
-            loginHuanxinServer("nRobin", "222222");
+        if (!CustomerServiceManager.getInstance().isLoggedIn()) {
+            loginHuanxinServer();
         }
     }
 
@@ -51,37 +47,20 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void loginHuanxinServer(final String uname, final String upwd) {
-        // login huanxin server
-        EMClient.getInstance().login(uname, upwd, new EMCallBack() {
-            @Override
-            public void onSuccess() {
-                // DemoHelper.getInstance().setCurrentUserName(uname);
-                // DemoHelper.getInstance().setCurrentPassword(upwd);
-                Log.d(TAG, "onSuccess: 登录环信成功!");
-                runOnUiThread(new Runnable() {
+    public void loginHuanxinServer() {
+        CustomerServiceManager.getInstance().login("dluffy", "222222",
+                new CustomerServiceManager.LoginListener() {
                     @Override
-                    public void run() {
+                    public void onSuccess() {
                         initConversationViews();
                     }
-                });
-            }
 
-            @Override
-            public void onProgress(int progress, String status) {}
-
-            @Override
-            public void onError(final int code, final String message) {
-                Log.d(TAG, "onError: 登录环信失败!");
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(HomeActivity.this, "登录环信服务器失败" + message, Toast.LENGTH_SHORT)
+                    @Override
+                    public void onFail(String errorMsg) {
+                        Toast.makeText(HomeActivity.this, "登陆环信服务器失败", Toast.LENGTH_SHORT)
                                 .show();
-                        finish();
                     }
                 });
-            }
-        });
     }
 
     @Override
@@ -91,36 +70,20 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     }
 
     private void initConversationViews() {
-        EMClient.getInstance().chatManager().loadAllConversations();
-        Map<String, EMConversation> conversations = EMClient.getInstance().chatManager()
-                .getAllConversations();
-        if (conversations.size() < 1) {
+        EMConversation conversation = CustomerServiceManager.getInstance().getConversation();
+        if (conversation == null) {
             conversationContainer.setVisibility(View.GONE);
         } else {
             conversationContainer.setVisibility(View.VISIBLE);
-            EMConversation kefuCon = conversations.values().iterator().next();
-            EMMessage lastMsg = kefuCon.getLastMessage();
-            if (lastMsg == null) {
-                lastMsgView.setText("null");
-                return;
-            }
-            if (lastMsg.getType() == EMMessage.Type.IMAGE) {
-                lastMsgView.setText("[图片]");
-            } else {
-                EMTextMessageBody textBody = (EMTextMessageBody) lastMsg.getBody();
-                lastMsgView.setText(textBody.getMessage());
-            }
-            if (kefuCon.getUnreadMsgCount() > 0) {
-                unreadCountView.setVisibility(View.VISIBLE);
-                unreadCountView.setText(String.valueOf(kefuCon.getUnreadMsgCount()));
-            } else {
-                unreadCountView.setVisibility(View.GONE);
-            }
+            EMMessage lastMsg = conversation.getLastMessage();
+            lastMsgView.setText(EaseCommonUtils.getMessageDigest(lastMsg));
+            int unreadCount = conversation.getUnreadMsgCount();
+            unreadCountView.setText(String.valueOf(conversation.getUnreadMsgCount()));
+            unreadCountView.setVisibility(unreadCount > 0 ? View.VISIBLE : View.GONE);
         }
     }
 
     private void gotoConversation() {
         startActivity(new Intent(HomeActivity.this, ChatActivity.class));
-//        .putExtra( Constant.INTENT_CODE_IMG_SELECTED_KEY, selectedIndex).putExtra( Constant.MESSAGE_TO_INTENT_EXTRA, messageToIndex));
     }
 }

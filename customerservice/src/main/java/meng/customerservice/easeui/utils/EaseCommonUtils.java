@@ -28,141 +28,149 @@ import java.util.List;
 
 import meng.customerservice.easeui.EaseConstant;
 
-
 public class EaseCommonUtils {
-	private static final String TAG = "CommonUtils";
-	/**
-	 * 检测网络是否可用
-	 *
-	 * @param context
-	 * @return
-	 */
-	public static boolean isNetWorkConnected(Context context) {
-		if (context != null) {
-			ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-			if (mNetworkInfo != null) {
-				return mNetworkInfo.isAvailable() && mNetworkInfo.isConnected();
-			}
-		}
+    private static final String TAG = "CommonUtils";
 
-		return false;
-	}
+    /**
+     * 检测网络是否可用
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isNetWorkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable() && mNetworkInfo.isConnected();
+            }
+        }
 
-	/**
-	 * 检测Sdcard是否存在
-	 *
-	 * @return
-	 */
-	public static boolean isExitsSdcard() {
-		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-			return true;
-		else
-			return false;
-	}
+        return false;
+    }
 
-	public static EMMessage createExpressionMessage(String toChatUsername, String expressioName, String identityCode){
-	    EMMessage message = EMMessage.createTxtSendMessage("["+expressioName+"]", toChatUsername);
-        if(identityCode != null){
+    /**
+     * 检测Sdcard是否存在
+     *
+     * @return
+     */
+    public static boolean isExitsSdcard() {
+        if (android.os.Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED))
+            return true;
+        else
+            return false;
+    }
+
+    public static EMMessage createExpressionMessage(String toChatUsername, String expressioName,
+            String identityCode) {
+        EMMessage message = EMMessage.createTxtSendMessage("[" + expressioName + "]",
+                toChatUsername);
+        if (identityCode != null) {
             message.setAttribute(EaseConstant.MESSAGE_ATTR_EXPRESSION_ID, identityCode);
         }
         message.setAttribute(EaseConstant.MESSAGE_ATTR_IS_BIG_EXPRESSION, true);
         return message;
-	}
+    }
 
-	/**
+    /**
      * 根据消息内容和消息类型获取消息内容提示
      *
      * @param message
-     * @param context
      * @return
      */
-    public static String getMessageDigest(EMMessage message, Context context) {
-        String digest = "";
-        switch (message.getType()) {
-        case IMAGE: // 图片消息
-            digest = "[图片]";
-            break;
-        case TXT: // 文本消息
-            EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-            digest = txtBody.getMessage();
-            break;
-        case FILE: //普通文件消息
-            digest = "[文件]";
-            break;
-        default:
-            EMLog.e(TAG, "error, unknow type");
+    public static String getMessageDigest(EMMessage message) {
+        if (message == null) {
             return "";
+        }
+        String digest;
+        switch (message.getType()) {
+            case IMAGE: // 图片消息
+                digest = "[图片]";
+                break;
+            case TXT: // 文本消息
+                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+                digest = txtBody.getMessage();
+                break;
+            case FILE: // 普通文件消息
+                digest = "[文件]";
+                break;
+            default:
+                EMLog.e(TAG, "[未知类型]");
+                return "";
         }
 
         return digest;
     }
 
-    static String getString(Context context, int resId){
+    static String getString(Context context, int resId) {
         return context.getResources().getString(resId);
     }
 
-	/**
-	 * 获取栈顶的activity
-	 * @param context
-	 * @return
-	 */
-	public static String getTopActivity(Context context) {
-		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-		List<RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
+    /**
+     * 获取栈顶的activity
+     * 
+     * @param context
+     * @return
+     */
+    public static String getTopActivity(Context context) {
+        ActivityManager manager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
 
-		if (runningTaskInfos != null)
-			return runningTaskInfos.get(0).topActivity.getClassName();
-		else
-			return "";
-	}
-	/*
-	*//**
-     * 设置user昵称(没有昵称取username)的首字母属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
-     *
-     * @param user
-     *//*
-    public static void setUserInitialLetter(EaseUser user) {
-        final String DefaultLetter = "#";
-        String letter = DefaultLetter;
-
-        final class GetInitialLetter {
-            String getLetter(String name) {
-                if (TextUtils.isEmpty(name)) {
-                    return DefaultLetter;
-                }
-                char char0 = name.toLowerCase().charAt(0);
-                if (Character.isDigit(char0)) {
-                    return DefaultLetter;
-                }
-                ArrayList<Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-                if (l != null && l.size() > 0 && l.get(0).target.length() > 0)
-                {
-                    Token token = l.get(0);
-                    String letter = token.target.substring(0, 1).toUpperCase();
-                    char c = letter.charAt(0);
-                    if (c < 'A' || c > 'Z') {
-                        return DefaultLetter;
-                    }
-                    return letter;
-                }
-                return DefaultLetter;
-            }
-        }
-
-        if ( !TextUtils.isEmpty(user.getNick()) ) {
-            letter = new GetInitialLetter().getLetter(user.getNick());
-            user.setInitialLetter(letter);
-            return;
-        }
-        if (letter == DefaultLetter && !TextUtils.isEmpty(user.getUsername())) {
-            letter = new GetInitialLetter().getLetter(user.getUsername());
-        }
-        user.setInitialLetter(letter);
+        if (runningTaskInfos != null)
+            return runningTaskInfos.get(0).topActivity.getClassName();
+        else
+            return "";
     }
-    */
+
+    /*
+    *//**
+       * 设置user昵称(没有昵称取username)的首字母属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
+       *
+       * @param user
+       */
+//    public static void setUserInitialLetter(EaseUser user) {
+//        final String DefaultLetter = "#";
+//        String letter = DefaultLetter;
+//        final class GetInitialLetter {
+//            String getLetter(String name) {
+//                if (TextUtils.isEmpty(name)) {
+//                    return DefaultLetter;
+//                }
+//                char char0 = name.toLowerCase().charAt(0);
+//                if (Character.isDigit(char0)) {
+//                    return DefaultLetter;
+//                }
+//                ArrayList<Token> l = HanziToPinyin.getInstance().get(name.substring(0,
+//                        1));
+//                if (l != null && l.size() > 0 && l.get(0).target.length() > 0) {
+//                    Token token = l.get(0);
+//                    String letter = token.target.substring(0, 1).toUpperCase();
+//                    char c = letter.charAt(0);
+//                    if (c < 'A' || c > 'Z') {
+//                        return DefaultLetter;
+//                    }
+//                    return letter;
+//                }
+//                return DefaultLetter;
+//            }
+//        }
+//        if (!TextUtils.isEmpty(user.getNick())) {
+//            letter = new GetInitialLetter().getLetter(user.getNick());
+//            user.setInitialLetter(letter);
+//            return;
+//        }
+//        if (letter == DefaultLetter && !TextUtils.isEmpty(user.getUsername())) {
+//            letter = new GetInitialLetter().getLetter(user.getUsername());
+//        }
+//        user.setInitialLetter(letter);
+//    }
+
     /**
      * 将应用的会话类型转化为SDK的会话类型
+     * 
      * @param chatType
      * @return
      */
