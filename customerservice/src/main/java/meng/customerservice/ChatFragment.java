@@ -320,6 +320,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.send_btn && !TextUtils.isEmpty(inputTextView.getText())) {
             sendTextMessage(inputTextView.getText().toString());
+            inputTextView.setText("");
         }
     }
 

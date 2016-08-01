@@ -1,6 +1,7 @@
 package meng.customerservice.easeui;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
@@ -80,13 +81,12 @@ public class EaseChatMessageList extends RelativeLayout {
     }
 
     protected void parseStyle(Context context, AttributeSet attrs) {
-        // TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
-        // showAvatar = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserAvatar, true);
-        // myBubbleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
-        // otherBuddleBg =
-        // ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
-        // showUserNick = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserNick, false);
-        // ta.recycle();
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
+        showAvatar = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserAvatar, true);
+        myBubbleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
+        otherBuddleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
+        showUserNick = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserNick, false);
+        ta.recycle();
     }
 
     /**
