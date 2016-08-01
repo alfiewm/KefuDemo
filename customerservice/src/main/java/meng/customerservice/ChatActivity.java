@@ -50,6 +50,9 @@ public class ChatActivity extends FragmentActivity {
             finish();
             startActivity(intent);
         }
+    }
 
+    public void sendRobotMessage(String txtContent, String menuId) {
+        chatFragment.sendRobotMessage(txtContent, menuId);
     }
 }

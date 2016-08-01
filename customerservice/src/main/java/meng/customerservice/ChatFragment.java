@@ -24,6 +24,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.List;
 
@@ -54,7 +56,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     protected boolean isloading;
     protected boolean haveMoreData = true;
     protected int pagesize = 20;
-    protected EMMessage contextMenuMessage;
     private boolean isMessageListInited;
 
     private EditText inputTextView;
@@ -142,7 +143,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     }
 
     protected void onMessageListInit() {
-        messageList.init(toChatUsername, chatType, null);
+        messageList.init(toChatUsername, chatType, new EaseCustomChatRowProvider(getActivity()));
         // 设置list item里的控件的点击事件
         setListItemClickListener();
 
@@ -162,11 +163,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         messageList.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
 
             @Override
-            public void onUserAvatarClick(String username) {
-                if (chatFragmentListener != null) {
-                    chatFragmentListener.onAvatarClick(username);
-                }
-            }
+            public void onUserAvatarClick(String username) {}
 
             @Override
             public void onResendClick(final EMMessage message) {
@@ -174,18 +171,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             }
 
             @Override
-            public void onBubbleLongClick(EMMessage message) {
-                contextMenuMessage = message;
-                if (chatFragmentListener != null) {
-                    chatFragmentListener.onMessageBubbleLongClick(message);
-                }
-            }
+            public void onBubbleLongClick(EMMessage message) {}
 
             @Override
             public boolean onBubbleClick(EMMessage message) {
-                if (chatFragmentListener != null) {
-                    return chatFragmentListener.onMessageBubbleClick(message);
-                }
                 return false;
             }
         });
@@ -280,10 +269,10 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                 if (username.equals(toChatUsername)) {
                     messageList.refreshSelectLast();
                     // 声音和震动提示有新消息
-                    // EMClient.getInstance().getNotifier().viberateAndPlayTone(message);
+                    CustomerServiceManager.getInstance().getNotifier().viberateAndPlayTone(message);
                 } else {
                     // 如果消息不是和当前聊天ID的消息
-                    // EaseUI.getInstance().getNotifier().onNewMsg(message);
+                    CustomerServiceManager.getInstance().getNotifier().onNewMsg(message);
                 }
             }
         }
@@ -310,12 +299,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         }
     };
 
-    protected EaseChatFragmentListener chatFragmentListener;
-
-    public void setChatFragmentListener(EaseChatFragmentListener chatFragmentListener) {
-        this.chatFragmentListener = chatFragmentListener;
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.send_btn && !TextUtils.isEmpty(inputTextView.getText())) {
@@ -324,42 +307,18 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public interface EaseChatFragmentListener {
-
-        /**
-         * 设置消息扩展属性
-         */
-        void onSetMessageAttributes(EMMessage message);
-
-        /**
-         * 进入会话详情
-         */
-        void onEnterToChatDetails();
-
-        /**
-         * 用户头像点击事件
-         *
-         * @param username
-         */
-        void onAvatarClick(String username);
-
-        /**
-         * 消息气泡框点击事件
-         */
-        boolean onMessageBubbleClick(EMMessage message);
-
-        /**
-         * 消息气泡框长按事件
-         */
-        void onMessageBubbleLongClick(EMMessage message);
-
-        /**
-         * 设置自定义chatrow提供者
-         *
-         * @return
-         */
-        EaseCustomChatRowProvider onSetCustomChatRowProvider();
-
+    public void sendRobotMessage(String content, String menuId) {
+        EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
+        if (!TextUtils.isEmpty(menuId)) {
+            JSONObject msgTypeJson = new JSONObject();
+            try {
+                JSONObject choiceJson = new JSONObject();
+                choiceJson.put("menuid", menuId);
+                msgTypeJson.put("choice", choiceJson);
+            } catch (Exception e) {}
+            message.setAttribute("msgtype", msgTypeJson);
+        }
+        sendMessage(message);
     }
 
     // 发送消息方法
@@ -384,10 +343,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         if (message == null) {
             return;
         }
-        if (chatFragmentListener != null) {
-            // 设置扩展属性
-            chatFragmentListener.onSetMessageAttributes(message);
-        }
+        // todo 设置扩展属性 售前/售后等技能组
         // 如果是群聊，设置chattype,默认是单聊
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             message.setChatType(EMMessage.ChatType.GroupChat);

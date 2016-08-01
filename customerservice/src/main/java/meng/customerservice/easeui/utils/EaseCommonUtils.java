@@ -18,11 +18,16 @@ import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 
 import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -125,48 +130,40 @@ public class EaseCommonUtils {
             return "";
     }
 
-    /*
-    *//**
-       * 设置user昵称(没有昵称取username)的首字母属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...字母栏快速定位联系人
-       *
-       * @param user
-       */
-//    public static void setUserInitialLetter(EaseUser user) {
-//        final String DefaultLetter = "#";
-//        String letter = DefaultLetter;
-//        final class GetInitialLetter {
-//            String getLetter(String name) {
-//                if (TextUtils.isEmpty(name)) {
-//                    return DefaultLetter;
-//                }
-//                char char0 = name.toLowerCase().charAt(0);
-//                if (Character.isDigit(char0)) {
-//                    return DefaultLetter;
-//                }
-//                ArrayList<Token> l = HanziToPinyin.getInstance().get(name.substring(0,
-//                        1));
-//                if (l != null && l.size() > 0 && l.get(0).target.length() > 0) {
-//                    Token token = l.get(0);
-//                    String letter = token.target.substring(0, 1).toUpperCase();
-//                    char c = letter.charAt(0);
-//                    if (c < 'A' || c > 'Z') {
-//                        return DefaultLetter;
-//                    }
-//                    return letter;
-//                }
-//                return DefaultLetter;
-//            }
-//        }
-//        if (!TextUtils.isEmpty(user.getNick())) {
-//            letter = new GetInitialLetter().getLetter(user.getNick());
-//            user.setInitialLetter(letter);
-//            return;
-//        }
-//        if (letter == DefaultLetter && !TextUtils.isEmpty(user.getUsername())) {
-//            letter = new GetInitialLetter().getLetter(user.getUsername());
-//        }
-//        user.setInitialLetter(letter);
-//    }
+    public static boolean isRobotMenuMessage(EMMessage message) {
+        try {
+            JSONObject jsonObj = message.getJSONObjectAttribute(EaseConstant.MESSAGE_ATTR_MSGTYPE);
+            if (jsonObj.has("choice") && !jsonObj.isNull("choice")) {
+                JSONObject jsonChoice = jsonObj.getJSONObject("choice");
+                if (jsonChoice.has("items") || jsonChoice.has("list")) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {}
+        return false;
+    }
+
+    /**
+     * 检测是否为转人工的消息，如果是则需要显示转人工的按钮
+     */
+    public static boolean isTransferToKefuMsg(EMMessage message) {
+        try {
+            JSONObject jsonObj = message.getJSONObjectAttribute(EaseConstant.WEICHAT_MSG);
+            if (jsonObj.has("ctrlType")) {
+                try {
+                    String type = jsonObj.getString("ctrlType");
+                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("TransferToKfHint")) {
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * 将应用的会话类型转化为SDK的会话类型
@@ -184,4 +181,33 @@ public class EaseCommonUtils {
         }
     }
 
+    public static boolean isEvalMessage(EMMessage message) {
+        try {
+            JSONObject jsonObj = message.getJSONObjectAttribute(EaseConstant.WEICHAT_MSG);
+            if (jsonObj.has("ctrlType")) {
+                try {
+                    String type = jsonObj.getString("ctrlType");
+                    if (!TextUtils.isEmpty(type) && (type.equalsIgnoreCase("inviteEnquiry")
+                            || type.equalsIgnoreCase("enquiry"))) {
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean isPictureTxtMessage(EMMessage message) {
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = message.getJSONObjectAttribute(EaseConstant.MESSAGE_ATTR_MSGTYPE);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+        return jsonObj != null && (jsonObj.has("order") || jsonObj.has("track"));
+    }
 }

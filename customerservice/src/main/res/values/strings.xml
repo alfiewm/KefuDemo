@@ -6,4 +6,6 @@
     <string name="Have_downloaded">已下载</string>
     <string name="Did_not_download">未下载</string>
     <string name="not_download">未下载</string>
+    <string name="text_ack_msg">ack</string>
+    <string name="text_delivered_msg">delivered</string>
 </resources>

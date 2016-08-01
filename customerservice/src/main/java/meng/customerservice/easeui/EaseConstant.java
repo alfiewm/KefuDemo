@@ -35,4 +35,6 @@ public class EaseConstant {
     public static final String EXTRA_USER_ID = "userId";
     public static final String EXTRA_SHOW_USERNICK = "showUserNick";
     public static final String EXTRA_CONTEXT_TEXT_MESSAGE = "contextMessage";
+    public static final String MESSAGE_ATTR_MSGTYPE = "msgtype";
+    public static final String WEICHAT_MSG = "weichat";
 }

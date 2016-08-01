@@ -42,6 +42,10 @@ public class CustomerServiceManager {
 
     private CustomerServiceManager() {}
 
+    public EaseNotifier getNotifier() {
+        return easeNotifier;
+    }
+
     public void init(Context context, boolean debugMode) {
         EMClient.getInstance().init(context, getDefaultChatOptions());
         easeNotifier = new EaseNotifier();

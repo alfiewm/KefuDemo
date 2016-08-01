@@ -65,7 +65,7 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     private void initView() {
-        onInflatView();
+        onInflateView();
         timeStampView = (TextView) findViewById(R.id.timestamp);
         userAvatarView = (ImageView) findViewById(R.id.iv_userhead);
         bubbleLayout = findViewById(R.id.bubble);
@@ -304,7 +304,7 @@ public abstract class EaseChatRow extends LinearLayout {
     /**
      * 填充layout
      */
-    protected abstract void onInflatView();
+    protected abstract void onInflateView();
 
     /**
      * 查找chatrow里的控件
