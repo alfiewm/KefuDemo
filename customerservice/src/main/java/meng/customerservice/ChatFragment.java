@@ -250,14 +250,14 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         if (isMessageListInited)
             messageList.refresh();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        CustomerServiceManager.getInstance().addActivity(getActivity());
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // unregister this event listener when this activity enters the
-        // background
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        CustomerServiceManager.getInstance().removeActivity(getActivity());
     }
 
     EMMessageListener msgListener = new EmptyEMMessageListener() {

@@ -74,12 +74,14 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         super.onResume();
         renderConversationViews();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        CustomerServiceManager.getInstance().addActivity(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        CustomerServiceManager.getInstance().removeActivity(this);
     }
 
     private EMMessageListener msgListener = new EmptyEMMessageListener() {
