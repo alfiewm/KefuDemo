@@ -3,35 +3,38 @@ package meng.customerservice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
+
+import com.hyphenate.chat.EMClient;
+
+import meng.customerservice.easeui.EaseConstant;
 
 public class ChatActivity extends FragmentActivity {
 
-    public static ChatActivity activityInstance;
     private ChatFragment chatFragment;
-    String toChatUsername = "alfred";
+    private String peerUserId = "alfred";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EMClient.getInstance().isLoggedInBefore()) {
+            Toast.makeText(this, "请登录先!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_chat);
-        activityInstance = this;
-        // 聊天人或群id
-        // toChatUsername = HelpDeskPreferenceUtils.getInstance(this).getSettingCustomerAccount();
-        // 可以直接new EaseChatFratFragment使用
+        String contextMsg = "";
+        if (getIntent().getExtras() != null) {
+            contextMsg = getIntent().getExtras().getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, "");
+            peerUserId = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID, peerUserId);
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(EaseConstant.EXTRA_USER_ID, peerUserId);
+        bundle.putBoolean(EaseConstant.EXTRA_SHOW_USERNICK, true);
+        bundle.putString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, contextMsg);
         chatFragment = new ChatFragment();
-        Intent intent = getIntent();
-        intent.putExtra("userId", toChatUsername);
-        intent.putExtra("showUserNick", true);
-        // 传入参数
-        chatFragment.setArguments(intent.getExtras());
+        chatFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        activityInstance = null;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class ChatActivity extends FragmentActivity {
         setIntent(intent);
         // 点击notification bar进入聊天页面，保证只有一个聊天页面
         String username = intent.getStringExtra("userId");
-        if (toChatUsername.equals(username))
+        if (peerUserId.equals(username))
             super.onNewIntent(intent);
         else {
             finish();

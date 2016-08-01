@@ -69,7 +69,7 @@ public class CustomerServiceManager {
         EMClient.getInstance().login(uname, upwd, new EMCallBack() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, "onSuccess!");
+                Log.d(TAG, "login onSuccess!");
                 EMClient.getInstance().chatManager().loadAllConversations();
                 if (loginListener != null) {
                     mainHandler.post(new Runnable() {
@@ -86,7 +86,7 @@ public class CustomerServiceManager {
 
             @Override
             public void onError(final int code, final String message) {
-                Log.d(TAG, "onError! errorMsg = " + message);
+                Log.d(TAG, "login onError! errorMsg = " + message);
                 if (loginListener != null) {
                     mainHandler.post(new Runnable() {
                         @Override
@@ -100,11 +100,12 @@ public class CustomerServiceManager {
     }
 
     public void logout() {
-        // TODO(mwang): 16/8/1
+        EMClient.getInstance().logout(true/* 解绑GCM或者小米推送的token */);
     }
 
     public interface LoginListener {
         void onSuccess();
+
         void onFail(String errorMsg);
     }
 }

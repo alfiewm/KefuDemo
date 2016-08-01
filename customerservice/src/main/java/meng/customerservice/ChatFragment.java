@@ -68,11 +68,14 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         toChatUsername = fragmentArgs.getString(EaseConstant.EXTRA_USER_ID);
         // 是否显示用户昵称
         showUserNick = fragmentArgs.getBoolean(EaseConstant.EXTRA_SHOW_USERNICK, false);
+        String contextMsg = fragmentArgs.getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, "");
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         initView();
         setUpView();
-        sendTextMessage("您好!");
+        if (!TextUtils.isEmpty(contextMsg)) {
+            sendTextMessage(contextMsg);
+        }
     }
 
     @Override
