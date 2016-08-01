@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2016 Hyphenate Inc. All rights reserved.
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,9 +38,6 @@ public class EaseCommonUtils {
 
     /**
      * 检测网络是否可用
-     *
-     * @param context
-     * @return
      */
     public static boolean isNetWorkConnected(Context context) {
         if (context != null) {
@@ -57,19 +54,14 @@ public class EaseCommonUtils {
 
     /**
      * 检测Sdcard是否存在
-     *
-     * @return
      */
     public static boolean isExitsSdcard() {
-        if (android.os.Environment.getExternalStorageState()
-                .equals(android.os.Environment.MEDIA_MOUNTED))
-            return true;
-        else
-            return false;
+        return android.os.Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED);
     }
 
     public static EMMessage createExpressionMessage(String toChatUsername, String expressioName,
-            String identityCode) {
+                                                    String identityCode) {
         EMMessage message = EMMessage.createTxtSendMessage("[" + expressioName + "]",
                 toChatUsername);
         if (identityCode != null) {
@@ -81,9 +73,6 @@ public class EaseCommonUtils {
 
     /**
      * 根据消息内容和消息类型获取消息内容提示
-     *
-     * @param message
-     * @return
      */
     public static String getMessageDigest(EMMessage message) {
         if (message == null) {
@@ -109,15 +98,8 @@ public class EaseCommonUtils {
         return digest;
     }
 
-    static String getString(Context context, int resId) {
-        return context.getResources().getString(resId);
-    }
-
     /**
      * 获取栈顶的activity
-     * 
-     * @param context
-     * @return
      */
     public static String getTopActivity(Context context) {
         ActivityManager manager = (ActivityManager) context
@@ -139,7 +121,8 @@ public class EaseCommonUtils {
                     return true;
                 }
             }
-        } catch (Exception e) {}
+        } catch (Exception ignored) {
+        }
         return false;
     }
 
@@ -150,26 +133,18 @@ public class EaseCommonUtils {
         try {
             JSONObject jsonObj = message.getJSONObjectAttribute(EaseConstant.WEICHAT_MSG);
             if (jsonObj.has("ctrlType")) {
-                try {
-                    String type = jsonObj.getString("ctrlType");
-                    if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("TransferToKfHint")) {
-                        return true;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                String type = jsonObj.getString("ctrlType");
+                if (!TextUtils.isEmpty(type) && type.equalsIgnoreCase("TransferToKfHint")) {
+                    return true;
                 }
             }
-        } catch (HyphenateException e) {
-            e.printStackTrace();
+        } catch (JSONException | HyphenateException ignored) {
         }
         return false;
     }
 
     /**
      * 将应用的会话类型转化为SDK的会话类型
-     * 
-     * @param chatType
-     * @return
      */
     public static EMConversationType getConversationType(int chatType) {
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
@@ -185,18 +160,13 @@ public class EaseCommonUtils {
         try {
             JSONObject jsonObj = message.getJSONObjectAttribute(EaseConstant.WEICHAT_MSG);
             if (jsonObj.has("ctrlType")) {
-                try {
-                    String type = jsonObj.getString("ctrlType");
-                    if (!TextUtils.isEmpty(type) && (type.equalsIgnoreCase("inviteEnquiry")
-                            || type.equalsIgnoreCase("enquiry"))) {
-                        return true;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                String type = jsonObj.getString("ctrlType");
+                if (!TextUtils.isEmpty(type) && (type.equalsIgnoreCase("inviteEnquiry")
+                        || type.equalsIgnoreCase("enquiry"))) {
+                    return true;
                 }
             }
-        } catch (HyphenateException e) {
-            e.printStackTrace();
+        } catch (JSONException | HyphenateException ignored) {
         }
         return false;
     }
@@ -205,8 +175,7 @@ public class EaseCommonUtils {
         JSONObject jsonObj = null;
         try {
             jsonObj = message.getJSONObjectAttribute(EaseConstant.MESSAGE_ATTR_MSGTYPE);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
+        } catch (HyphenateException ignored) {
         }
         return jsonObj != null && (jsonObj.has("order") || jsonObj.has("track"));
     }
