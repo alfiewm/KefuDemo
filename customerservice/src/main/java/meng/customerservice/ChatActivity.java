@@ -12,7 +12,7 @@ import meng.customerservice.easeui.EaseConstant;
 public class ChatActivity extends FragmentActivity {
 
     private ChatFragment chatFragment;
-    private String peerUserId = "alfred";
+    private String peerUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class ChatActivity extends FragmentActivity {
         }
         setContentView(R.layout.activity_chat);
         String contextMsg = "";
+        peerUserId = getString(R.string.easemob_customer_service_id);
         if (getIntent().getExtras() != null) {
             contextMsg = getIntent().getExtras().getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE,
                     "");

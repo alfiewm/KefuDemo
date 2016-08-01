@@ -21,3 +21,8 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+project.ext {
+    easemob_appkey = "jackfrost#jackef"
+    easemob_customer_service_id = "alfred"
+}

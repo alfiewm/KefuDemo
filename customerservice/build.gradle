@@ -13,6 +13,8 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        resValue "string", "easemob_appkey", rootProject.ext.easemob_appkey
+        resValue "string", "easemob_customer_service_id", rootProject.ext.easemob_customer_service_id
     }
     buildTypes {
         release {
