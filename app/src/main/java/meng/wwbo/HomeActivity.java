@@ -47,7 +47,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.contact_kefu) {
-            gotoConversation("[咨询]高三物理尖子班XXD");
+            gotoConversation("[咨询] 高三物理尖子班XXD");
         } else if (v.getId() == R.id.conversation_container) {
             gotoConversation("");
         }
