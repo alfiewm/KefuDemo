@@ -29,6 +29,7 @@ import java.util.List;
 
 import meng.customerservice.easeui.EaseChatMessageList;
 import meng.customerservice.easeui.EaseConstant;
+import meng.customerservice.easeui.EmptyEMMessageListener;
 import meng.customerservice.easeui.chatrow.EaseCustomChatRowProvider;
 import meng.customerservice.easeui.utils.EaseCommonUtils;
 
@@ -256,7 +257,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
-    EMMessageListener msgListener = new EMMessageListener() {
+    EMMessageListener msgListener = new EmptyEMMessageListener() {
 
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
@@ -282,11 +283,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                     // EaseUI.getInstance().getNotifier().onNewMsg(message);
                 }
             }
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-
         }
 
         @Override
@@ -352,15 +348,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
          * 消息气泡框长按事件
          */
         void onMessageBubbleLongClick(EMMessage message);
-
-        /**
-         * 扩展输入栏item点击事件,如果要覆盖EaseChatFragment已有的点击事件，return true
-         *
-         * @param view
-         * @param itemId
-         * @return
-         */
-        boolean onExtendMenuItemClick(int itemId, View view);
 
         /**
          * 设置自定义chatrow提供者

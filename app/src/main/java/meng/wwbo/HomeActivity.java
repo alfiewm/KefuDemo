@@ -8,11 +8,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 
+import java.util.List;
+
 import meng.customerservice.ChatActivity;
 import meng.customerservice.CustomerServiceManager;
+import meng.customerservice.easeui.EmptyEMMessageListener;
 import meng.customerservice.easeui.utils.EaseCommonUtils;
 
 public class HomeActivity extends Activity implements View.OnClickListener {
@@ -52,7 +57,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
                 new CustomerServiceManager.LoginListener() {
                     @Override
                     public void onSuccess() {
-                        initConversationViews();
+                        renderConversationViews();
                     }
 
                     @Override
@@ -66,10 +71,30 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        initConversationViews();
+        renderConversationViews();
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
-    private void initConversationViews() {
+    @Override
+    public void onStop() {
+        super.onStop();
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+    }
+
+    private EMMessageListener msgListener = new EmptyEMMessageListener() {
+        @Override
+        public void onMessageReceived(List<EMMessage> list) {
+            super.onMessageReceived(list);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    renderConversationViews();
+                }
+            });
+        }
+    };
+
+    private void renderConversationViews() {
         EMConversation conversation = CustomerServiceManager.getInstance().getConversation();
         if (conversation == null) {
             conversationContainer.setVisibility(View.GONE);
