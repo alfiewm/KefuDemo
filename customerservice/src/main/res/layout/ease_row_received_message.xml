@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
         android:id="@+id/timestamp"
-        style="@style/chat_text_date_style"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_chat_activity" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textColor="#a0a0a0"
+        android:textSize="12sp"
+        tools:text="05:03 pm" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="49dp">
 
         <ImageView
             android:id="@+id/iv_userhead"
             android:layout_width="@dimen/size_avatar"
             android:layout_height="@dimen/size_avatar"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:scaleType="fitXY" />
+            android:layout_marginLeft="2dp"
+            android:scaleType="fitXY"
+            tools:src="@drawable/tutor_my_avatar_default_round" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/bubble"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_userid"
-            android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:layout_toRightOf="@id/iv_userhead"
-             >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_chatcontent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:layout_centerInParent="true"
-                android:gravity="center|left"
-                android:paddingLeft="6dp"
-                android:paddingRight="1dp"
+                android:layout_gravity="left|center_vertical"
+                android:background="@drawable/tutor_receive_text_bg"
                 android:lineSpacingExtra="2dp"
-                android:minHeight="38dp"
-                android:maxWidth="225.0dip"
-                android:textColor="#ff000000"
-                android:textSize="15sp" />
-        </RelativeLayout>
+                android:paddingBottom="9dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="12dp"
+                android:paddingTop="10dp"
+                android:textColor="#333333"
+                android:textColorLink="#0099ff"
+                android:textSize="15sp"
+                tools:text="我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息我是消息" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tv_userid"
@@ -57,9 +61,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_nick_margin_left"
-            android:textSize="@dimen/chat_nick_text_size"
             android:layout_toRightOf="@id/iv_userhead"
+            android:textSize="@dimen/chat_nick_text_size"
             android:visibility="gone" />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

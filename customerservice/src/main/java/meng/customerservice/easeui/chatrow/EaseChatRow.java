@@ -154,15 +154,6 @@ public abstract class EaseChatRow extends LinearLayout {
                 else
                     usernickView.setVisibility(View.GONE);
             }
-            if (message.direct() == Direct.SEND) {
-                if (((EaseMessageAdapter) adapter).getMyBubbleBg() != null)
-                    bubbleLayout
-                            .setBackgroundDrawable(((EaseMessageAdapter) adapter).getMyBubbleBg());
-            } else if (message.direct() == Direct.RECEIVE) {
-                if (((EaseMessageAdapter) adapter).getOtherBuddleBg() != null)
-                    bubbleLayout.setBackgroundDrawable(
-                            ((EaseMessageAdapter) adapter).getOtherBuddleBg());
-            }
         }
     }
 
