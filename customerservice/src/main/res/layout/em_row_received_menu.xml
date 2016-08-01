@@ -24,7 +24,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:src="@drawable/tutor_my_avatar_default_round" />
+            android:src="@drawable/cs_my_avatar_default_round" />
 
         <LinearLayout
             android:id="@+id/ll_chatcontent"
@@ -33,7 +33,7 @@
             android:layout_below="@+id/tv_userid"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:layout_toRightOf="@id/iv_userhead"
-            android:background="@drawable/tutor_receive_text_bg"
+            android:background="@drawable/cs_receive_text_bg"
             android:maxWidth="225.0dip"
             android:orientation="vertical"
             android:paddingLeft="20dp"

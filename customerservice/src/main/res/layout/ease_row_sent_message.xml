@@ -56,7 +56,7 @@
                 android:id="@+id/tv_chatcontent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/tutor_send_text_bg"
+                android:background="@drawable/cs_send_text_bg"
                 android:lineSpacingExtra="2dp"
                 android:paddingBottom="9dp"
                 android:paddingLeft="12dp"
@@ -95,7 +95,7 @@
             android:layout_height="@dimen/size_avatar"
             android:layout_marginLeft="2dp"
             android:scaleType="fitXY"
-            tools:src="@drawable/tutor_my_avatar_default_round" />
+            tools:src="@drawable/cs_my_avatar_default_round" />
     </LinearLayout>
 
 </LinearLayout>
