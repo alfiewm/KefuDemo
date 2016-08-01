@@ -4,11 +4,11 @@ import android.content.Context;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
+import com.squareup.picasso.Picasso;
 
 import meng.customerservice.R;
+import meng.customerservice.utils.CircleTransform;
 
 public class EaseUserUtils {
     public static boolean isSelf(String username) {
@@ -17,12 +17,15 @@ public class EaseUserUtils {
 
     public static void setUserAvatar(Context context, String username, ImageView imageView) {
         if (!isSelf(username)) {
-            Glide.with(context).load(R.drawable.ease_default_image).into(imageView);
+            Picasso.with(context).load(R.drawable.tutor_my_avatar_default_round).into(imageView);
         } else {
-            Glide.with(context)
-                    .load("http://ytkgallery.yuanfudao.ws/android/ape/images/15645503038ed3e.jpg")
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.drawable.ease_default_image)
+            Picasso.with(context)
+                    // TODO(mwang): 16/8/1 get from host project 
+                    .load("http://thesource.com/wp-content/uploads/2015/02/Pablo_Picasso1.jpg")
+                    .placeholder(R.drawable.tutor_my_avatar_default_round)
+                    .centerCrop()
+                    .resize(100, 100)
+                    .transform(new CircleTransform())
                     .into(imageView);
         }
     }
