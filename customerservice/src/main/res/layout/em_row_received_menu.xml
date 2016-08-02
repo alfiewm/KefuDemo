@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingTop="13dp">
 
@@ -13,17 +13,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_chat_activity">
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="49dp">
 
         <ImageView
             android:id="@+id/iv_userhead"
             android:layout_width="@dimen/size_avatar"
             android:layout_height="@dimen/size_avatar"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             tools:src="@drawable/cs_my_avatar_default_round" />
 
@@ -31,9 +32,7 @@
             android:id="@+id/ll_chatcontent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_userid"
             android:layout_marginLeft="@dimen/margin_chat_activity"
-            android:layout_toRightOf="@id/iv_userhead"
             android:background="@drawable/cs_receive_text_bg"
             android:maxWidth="225.0dip"
             android:orientation="vertical"
@@ -44,14 +43,15 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="我是机器人消息的标题部分,哈哈哈哈哈" />
 
             <LinearLayout
                 android:id="@+id/ll_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:orientation="vertical"></LinearLayout>
+                android:layout_marginTop="6dp"
+                android:orientation="vertical" />
         </LinearLayout>
 
         <TextView
@@ -60,10 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/chat_nick_margin_left"
-            android:layout_toRightOf="@id/iv_userhead"
             android:textSize="@dimen/chat_nick_text_size"
             android:visibility="gone" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

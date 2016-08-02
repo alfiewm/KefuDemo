@@ -3,11 +3,12 @@
     <string name="send_fail">发送失败</string>
     <string name="error_send_invalid_content">你发送了不合法的消息内容</string>
     <string name="connect_failuer_toast">请检查网络或稍候重试</string>
-    <string name="Have_downloaded">已下载</string>
-    <string name="Did_not_download">未下载</string>
+    <string name="have_downloaded">已下载</string>
+    <string name="did_not_download">未下载</string>
     <string name="not_download">未下载</string>
     <string name="text_ack_msg">ack</string>
     <string name="text_delivered_msg">delivered</string>
-    <string name="Download_the_pictures_new">下载图片:</string>
-    <string name="Download_the_pictures">下载图片:0%</string>
+    <string name="download_the_pictures_new">下载图片:</string>
+    <string name="download_the_pictures">下载图片:0%</string>
+    <string name="transfer_to_kefu">转人工客服</string>
 </resources>

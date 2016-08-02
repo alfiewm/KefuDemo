@@ -57,9 +57,9 @@ public class EaseChatRowFile extends EaseChatRow {
         if (message.direct() == EMMessage.Direct.RECEIVE) { // 接收的消息
             File file = new File(filePath);
             if (file != null && file.exists()) {
-                fileStateView.setText(R.string.Have_downloaded);
+                fileStateView.setText(R.string.have_downloaded);
             } else {
-                fileStateView.setText(R.string.Did_not_download);
+                fileStateView.setText(R.string.did_not_download);
             }
             return;
         }

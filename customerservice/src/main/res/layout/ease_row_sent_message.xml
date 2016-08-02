@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="horizontal"
+        android:paddingLeft="49dp"
         android:paddingRight="12dp">
 
         <View

@@ -2,8 +2,8 @@ package meng.customerservice.easeui.chatrow;
 
 import android.content.Context;
 import android.text.Spannable;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,7 +13,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.DensityUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -125,32 +124,17 @@ public class ChatRowRobotMenu extends EaseChatRow {
     }
 
     @Override
-    protected void onBubbleClick() {
+    protected void onBubbleClick() {}
 
+    private boolean isTransferKefuChoice(String choice) {
+        return choice != null && choice.equals(context.getString(R.string.transfer_to_kefu));
     }
 
     private void setRobotMenuMessagesLayout(LinearLayout parentView, JSONArray jsonArr) {
         try {
             parentView.removeAllViews();
             for (int i = 0; i < jsonArr.length(); i++) {
-                final String itemStr = jsonArr.getString(i);
-                final TextView textView = new TextView(context);
-                textView.setText(itemStr);
-                textView.setTextSize(15);
-                textView.setTextColor(
-                        getResources().getColorStateList(R.color.em_menu_msg_text_color));
-                textView.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        ((ChatActivity) context).sendRobotMessage(itemStr, null);
-                    }
-                });
-                LayoutParams llLp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                llLp.bottomMargin = DensityUtil.dip2px(context, 3);
-                llLp.topMargin = DensityUtil.dip2px(context, 3);
-                parentView.addView(textView, llLp);
+                addChoiceItem(parentView, jsonArr.getString(i), null);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -162,28 +146,25 @@ public class ChatRowRobotMenu extends EaseChatRow {
             parentView.removeAllViews();
             for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject itemJson = jsonArr.getJSONObject(i);
-                final String itemStr = itemJson.getString("name");
-                final String itemId = itemJson.getString("id");
-                final TextView textView = new TextView(context);
-                textView.setText(itemStr);
-                textView.setTextSize(15);
-                textView.setTextColor(
-                        getResources().getColorStateList(R.color.em_menu_msg_text_color));
-                textView.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        ((ChatActivity) context).sendRobotMessage(itemStr, itemId);
-                    }
-                });
-                LayoutParams llLp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                llLp.bottomMargin = DensityUtil.dip2px(context, 3);
-                llLp.topMargin = DensityUtil.dip2px(context, 3);
-                parentView.addView(textView, llLp);
+                addChoiceItem(parentView, itemJson.getString("name"), itemJson.getString("id"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addChoiceItem(LinearLayout parentView, final String itemStr, final String itemId) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        final View itemView = inflater.inflate(isTransferKefuChoice(itemStr)
+                ? R.layout.transfer_kefu_item : R.layout.robot_choice_item, parentView,
+                false);
+        ((TextView) itemView.findViewById(R.id.desc)).setText(itemStr);
+        itemView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ChatActivity) context).sendRobotMessage(itemStr, itemId);
+            }
+        });
+        parentView.addView(itemView);
     }
 }

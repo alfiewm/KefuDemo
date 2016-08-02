@@ -114,7 +114,7 @@ public class EaseShowBigImageActivity extends Activity {
      * @param remoteFilePath
      */
     private void downloadImage(final String remoteFilePath, final Map<String, String> headers) {
-        String str1 = getResources().getString(R.string.Download_the_pictures);
+        String str1 = getResources().getString(R.string.download_the_pictures);
         pd = new ProgressDialog(this);
         pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pd.setCanceledOnTouchOutside(false);
@@ -174,7 +174,7 @@ public class EaseShowBigImageActivity extends Activity {
 
             public void onProgress(final int progress, String status) {
                 EMLog.d(TAG, "Progress: " + progress);
-                final String str2 = getResources().getString(R.string.Download_the_pictures_new);
+                final String str2 = getResources().getString(R.string.download_the_pictures_new);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
