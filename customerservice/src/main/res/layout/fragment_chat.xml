@@ -4,14 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#f2f0eb"
+    android:background="#f3f4f5"
     android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/navbar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/cs_bg_navbar">
+
+        <ImageView
+            android:id="@+id/navbar_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/cs_selector_nav_back" />
+
+        <TextView
+            android:id="@+id/navbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="在线客服"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/navbar_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:src="@drawable/cs_my_avatar_default_round" />
+    </FrameLayout>
 
     <meng.customerservice.easeui.EaseChatMessageList
         android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <View
         android:layout_width="match_parent"

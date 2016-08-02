@@ -1,6 +1,8 @@
 package meng.customerservice;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -43,23 +45,19 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     protected String toChatUsername;
     private int chatType = EaseConstant.CHATTYPE_SINGLE;
     protected boolean showUserNick;
-
     protected EMConversation conversation;
-
     protected InputMethodManager inputManager;
     protected ClipboardManager clipboard;
-
     protected Handler handler = new Handler();
     protected File cameraFile;
-    protected SwipeRefreshLayout swipeRefreshLayout;
-    protected ListView listView;
-    protected EaseChatMessageList messageList;
-
-    protected boolean isloading;
+    protected boolean isLoading;
     protected boolean haveMoreData = true;
-    protected int pagesize = 20;
+    protected int pageSize = 20;
     private boolean isMessageListInited;
 
+    protected SwipeRefreshLayout swipeRefreshLayout;
+    protected EaseChatMessageList messageList;
+    protected ListView listView;
     private EditText inputTextView;
     private TextView sendBtn;
 
@@ -74,8 +72,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         String contextMsg = fragmentArgs.getString(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, "");
         inputMethodManager = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        initView();
-        setUpView();
+        setupViews();
         if (!TextUtils.isEmpty(contextMsg)) {
             sendTextMessage(contextMsg);
         }
@@ -83,21 +80,19 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.fragment_chat, container, false);
+    }
+
+    protected void setupViews() {
+        setupTitleBar();
+        View rootView = getView();
         inputTextView = (EditText) rootView.findViewById(R.id.input_text);
         inputTextView.addTextChangedListener(textWatcher);
         sendBtn = (TextView) rootView.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(this);
         rootView.findViewById(R.id.choose_pic).setOnClickListener(this);
-        return rootView;
-    }
-
-    /**
-     * init view
-     */
-    protected void initView() {
         // 消息列表layout
-        messageList = (EaseChatMessageList) getView().findViewById(R.id.message_list);
+        messageList = (EaseChatMessageList) rootView.findViewById(R.id.message_list);
         listView = messageList.getListView();
 
         // init input menu
@@ -111,6 +106,15 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         getActivity().getWindow()
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        initConversation();
+        initMessageList();
+        setRefreshLayoutListener();
+    }
+
+    private void setupTitleBar() {
+        getView().findViewById(R.id.navbar_left).setOnClickListener(this);
+        getView().findViewById(R.id.navbar_right).setOnClickListener(this);
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -126,13 +130,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         }
     };
 
-    protected void setUpView() {
-        // TODO(mwang): 16/7/31 标题设置
-        initConversation();
-        initMessageList();
-        setRefreshLayoutListener();
-    }
-
     protected void initConversation() {
         // 获取当前conversation对象
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername,
@@ -143,12 +140,12 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         // 这个数目如果比用户期望进入会话界面时显示的个数不一样，就多加载一些
         final List<EMMessage> msgs = conversation.getAllMessages();
         int msgCount = msgs != null ? msgs.size() : 0;
-        if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
+        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
             String msgId = null;
             if (msgs != null && msgs.size() > 0) {
                 msgId = msgs.get(0).getMsgId();
             }
-            conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
+            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
         }
 
     }
@@ -213,26 +210,26 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void run() {
-                        if (listView.getFirstVisiblePosition() == 0 && !isloading && haveMoreData) {
+                        if (listView.getFirstVisiblePosition() == 0 && !isLoading && haveMoreData) {
                             List<EMMessage> messages;
                             try {
                                 messages = conversation.loadMoreMsgFromDB(
                                         messageList.getItem(0).getMsgId(),
-                                        pagesize);
+                                        pageSize);
                             } catch (Exception e1) {
                                 swipeRefreshLayout.setRefreshing(false);
                                 return;
                             }
                             if (messages.size() > 0) {
                                 messageList.refreshSeekTo(messages.size() - 1);
-                                if (messages.size() != pagesize) {
+                                if (messages.size() != pageSize) {
                                     haveMoreData = false;
                                 }
                             } else {
                                 haveMoreData = false;
                             }
 
-                            isloading = false;
+                            isLoading = false;
 
                         } else {
                             Toast.makeText(getActivity(), "没有更多消息了", Toast.LENGTH_SHORT).show();
@@ -319,6 +316,20 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             }
         } else if (v.getId() == R.id.choose_pic) {
             // TODO(mwang): 16/8/2 choose pic
+        } else if (v.getId() == R.id.navbar_left) {
+            getActivity().finish();
+        } else if (v.getId() == R.id.navbar_right) {
+            callCustomerService();
+        }
+    }
+
+    private void callCustomerService() {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:4000630100"));
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            getActivity().startActivity(intent);
+        } else {
+            Toast.makeText(getActivity(), "没有安装打电话的应用", Toast.LENGTH_SHORT).show();
         }
     }
 
