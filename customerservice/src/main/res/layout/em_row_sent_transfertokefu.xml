@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
         android:id="@+id/timestamp"
@@ -24,7 +25,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:background="@drawable/cs_my_avatar_default_round"
+            tools:background="@drawable/cs_my_avatar_default_round"
             android:scaleType="fitXY" />
 
         <TextView

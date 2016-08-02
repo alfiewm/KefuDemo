@@ -17,7 +17,7 @@ public class EaseUserUtils {
 
     public static void setUserAvatar(Context context, String username, ImageView imageView) {
         if (!isSelf(username)) {
-            Picasso.with(context).load(R.drawable.cs_my_avatar_default_round).into(imageView);
+            Picasso.with(context).load(R.drawable.cs_customer_service).into(imageView);
         } else {
             Picasso.with(context)
                     // TODO(mwang): 16/8/1 get from host project 
