@@ -8,4 +8,6 @@
     <color name="holo_orange_light">#ffffbb33</color>
     <color name="holo_red_light">#ffff4444</color>
     <color name="em_menu_msg_text_color">#0088ff</color>
+
+    <color name="cs_bg_grey_1">#f3f4f5</color>
 </resources>

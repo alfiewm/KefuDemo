@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     protected ListView listView;
     private EditText inputTextView;
     private TextView sendBtn;
+    private ImageView choosePicView;
+    private View imageBoard;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -84,13 +87,20 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     }
 
     protected void setupViews() {
-        setupTitleBar();
         View rootView = getView();
+        setupTitleBar();
+
+        choosePicView = (ImageView) rootView.findViewById(R.id.choose_pic);
+        choosePicView.setOnClickListener(this);
+        imageBoard = rootView.findViewById(R.id.image_board);
+
         inputTextView = (EditText) rootView.findViewById(R.id.input_text);
         inputTextView.addTextChangedListener(textWatcher);
+        inputTextView.setOnClickListener(this);
+
         sendBtn = (TextView) rootView.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(this);
-        rootView.findViewById(R.id.choose_pic).setOnClickListener(this);
+
         // 消息列表layout
         messageList = (EaseChatMessageList) rootView.findViewById(R.id.message_list);
         listView = messageList.getListView();
@@ -188,10 +198,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    /**
-     * 隐藏软键盘
-     */
-    protected void hideKeyboard() {
+    private void hideKeyboard() {
         if (getActivity().getWindow()
                 .getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
             if (getActivity().getCurrentFocus() != null)
@@ -199,6 +206,12 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                         getActivity().getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    private void showSoftKeyBoard() {
+        inputMethodManager.toggleSoftInputFromWindow(
+                inputTextView.getWindowToken(), 0,
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     protected void setRefreshLayoutListener() {
@@ -314,12 +327,36 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                 sendTextMessage(inputTextView.getText().toString());
                 inputTextView.setText("");
             }
+        } else if (v.getId() == R.id.input_text) {
+            imageBoard.setVisibility(View.GONE);
+            choosePicView.setImageResource(R.drawable.cs_selector_camera);
         } else if (v.getId() == R.id.choose_pic) {
-            // TODO(mwang): 16/8/2 choose pic
+            switchBoard();
         } else if (v.getId() == R.id.navbar_left) {
             getActivity().finish();
         } else if (v.getId() == R.id.navbar_right) {
             callCustomerService();
+        } else if (v.getId() == R.id.btn_take_photo) {
+            // TODO(mwang): 16/8/2
+        } else if (v.getId() == R.id.btn_pick_photo) {
+            // TODO(mwang): 16/8/2
+        }
+    }
+
+    private void switchBoard() {
+        if (imageBoard.getVisibility() == View.VISIBLE) {
+            choosePicView.setImageResource(R.drawable.cs_selector_camera);
+            showSoftKeyBoard();
+            imageBoard.setVisibility(View.GONE);
+        } else {
+            choosePicView.setImageResource(R.drawable.cs_keyboard);
+            hideKeyboard();
+            imageBoard.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    imageBoard.setVisibility(View.VISIBLE);
+                }
+            }, 300);
         }
     }
 

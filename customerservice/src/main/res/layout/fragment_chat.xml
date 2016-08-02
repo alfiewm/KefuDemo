@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="#f3f4f5"
+    android:background="@color/cs_bg_grey_1"
     android:orientation="vertical">
 
     <FrameLayout
@@ -95,5 +94,58 @@
             android:text="发送"
             android:textColor="@android:color/white"
             android:textSize="15sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/image_board"
+        android:layout_width="match_parent"
+        android:layout_height="216dip"
+        android:padding="30dip"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/btn_take_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:src="@drawable/cs_selector_take_photo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:padding="10dip"
+                android:text="照片"
+                android:textColor="#666666" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="50dip"
+            android:layout_height="0dip" />
+
+        <LinearLayout
+            android:id="@+id/btn_pick_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dip"
+                android:layout_height="70dip"
+                android:src="@drawable/cs_selector_pick_photo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="10dip"
+                android:text="从相册选择"
+                android:textColor="#666666" />
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>
