@@ -193,14 +193,26 @@ public class CustomerServiceManager {
      * 账号在别的设备登录
      */
     protected void onConnectionConflict() {
-        Toast.makeText(appContext, "环信帐号在别的设备登录", Toast.LENGTH_SHORT).show();
+        postToast("环信帐号在别的设备登录");
     }
 
     /**
      * 账号被移除
      */
     protected void onCurrentAccountRemoved() {
-        Toast.makeText(appContext, "环信帐号被移除!", Toast.LENGTH_SHORT).show();
+        postToast("环信帐号被移除!");
+    }
+
+    private void postToast(final String msg) {
+        if (activityList.size() < 0) {
+            return;
+        }
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(appContext, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public interface LoginListener {
