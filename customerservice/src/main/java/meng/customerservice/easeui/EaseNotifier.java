@@ -228,16 +228,6 @@ public class EaseNotifier {
                 case IMAGE:
                     notifyText += msgs[1];
                     break;
-                case VOICE:
-
-                    notifyText += msgs[2];
-                    break;
-                case LOCATION:
-                    notifyText += msgs[3];
-                    break;
-                case VIDEO:
-                    notifyText += msgs[4];
-                    break;
                 case FILE:
                     notifyText += msgs[5];
                     break;
