@@ -8,4 +8,6 @@
     <string name="not_download">未下载</string>
     <string name="text_ack_msg">ack</string>
     <string name="text_delivered_msg">delivered</string>
+    <string name="Download_the_pictures_new">下载图片:</string>
+    <string name="Download_the_pictures">下载图片:0%</string>
 </resources>

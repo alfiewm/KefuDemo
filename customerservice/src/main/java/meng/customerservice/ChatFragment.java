@@ -1,10 +1,14 @@
 package meng.customerservice;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,6 +32,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.util.PathUtil;
 
 import org.json.JSONObject;
 
@@ -92,6 +97,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
         choosePicView = (ImageView) rootView.findViewById(R.id.choose_pic);
         choosePicView.setOnClickListener(this);
+        rootView.findViewById(R.id.btn_take_photo).setOnClickListener(this);
+        rootView.findViewById(R.id.btn_pick_photo).setOnClickListener(this);
         imageBoard = rootView.findViewById(R.id.image_board);
 
         inputTextView = (EditText) rootView.findViewById(R.id.input_text);
@@ -170,6 +177,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 hideKeyboard();
+                hideImageBoard();
                 return false;
             }
         });
@@ -337,17 +345,93 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         } else if (v.getId() == R.id.navbar_right) {
             callCustomerService();
         } else if (v.getId() == R.id.btn_take_photo) {
-            // TODO(mwang): 16/8/2
+            selectPicFromCamera();
         } else if (v.getId() == R.id.btn_pick_photo) {
-            // TODO(mwang): 16/8/2
+            selectPicFromLocal();
         }
+    }
+
+    protected static final int REQUEST_CODE_CAMERA = 2;
+    protected static final int REQUEST_CODE_LOCAL = 3;
+
+    protected void selectPicFromCamera() {
+        if (!EaseCommonUtils.isExitsSdcard()) {
+            Toast.makeText(getActivity(), "不存在SD卡!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        cameraFile = new File(PathUtil.getInstance().getImagePath(),
+                EMClient.getInstance().getCurrentUser()
+                        + System.currentTimeMillis() + ".jpg");
+        cameraFile.getParentFile().mkdirs();
+        startActivityForResult(
+                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(cameraFile)),
+                REQUEST_CODE_CAMERA);
+    }
+
+    protected void selectPicFromLocal() {
+        Intent intent;
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+        } else {
+            intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        }
+        startActivityForResult(intent, REQUEST_CODE_LOCAL);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CAMERA) { // 发送照片
+                if (cameraFile != null && cameraFile.exists())
+                    sendImageMessage(cameraFile.getAbsolutePath());
+            } else if (requestCode == REQUEST_CODE_LOCAL) { // 发送本地图片
+                if (data != null) {
+                    Uri selectedImage = data.getData();
+                    if (selectedImage != null) {
+                        sendPicByUri(selectedImage);
+                    }
+                }
+            }
+        }
+    }
+
+    protected void sendPicByUri(Uri selectedImage) {
+        String[] filePathColumn = {
+                MediaStore.Images.Media.DATA
+        };
+        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn,
+                null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            if (picturePath == null || picturePath.equals("null")) {
+                Toast.makeText(getActivity(), "找不到图片", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            sendImageMessage(picturePath);
+        } else {
+            File file = new File(selectedImage.getPath());
+            if (!file.exists()) {
+                Toast.makeText(getActivity(), "找不到图片", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            sendImageMessage(file.getAbsolutePath());
+        }
+
     }
 
     private void switchBoard() {
         if (imageBoard.getVisibility() == View.VISIBLE) {
-            choosePicView.setImageResource(R.drawable.cs_selector_camera);
+            hideImageBoard();
             showSoftKeyBoard();
-            imageBoard.setVisibility(View.GONE);
         } else {
             choosePicView.setImageResource(R.drawable.cs_keyboard);
             hideKeyboard();
@@ -358,6 +442,11 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                 }
             }, 300);
         }
+    }
+
+    private void hideImageBoard() {
+        choosePicView.setImageResource(R.drawable.cs_selector_camera);
+        imageBoard.setVisibility(View.GONE);
     }
 
     private void callCustomerService() {
@@ -425,5 +514,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         message.setStatus(EMMessage.Status.CREATE);
         EMClient.getInstance().chatManager().sendMessage(message);
         messageList.refresh();
+    }
+
+    public boolean onBackPressed() {
+        if (imageBoard.getVisibility() == View.VISIBLE) {
+            hideImageBoard();
+            return true;
+        }
+        return false;
     }
 }

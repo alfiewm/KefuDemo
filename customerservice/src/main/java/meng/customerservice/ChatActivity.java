@@ -56,4 +56,12 @@ public class ChatActivity extends FragmentActivity {
     public void sendRobotMessage(String txtContent, String menuId) {
         chatFragment.sendRobotMessage(txtContent, menuId);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (chatFragment.onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
+    }
 }

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="meng.customerservice">
 
@@ -8,6 +9,9 @@
             android:name=".ChatActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".easeui.EaseShowBigImageActivity"
+            android:screenOrientation="portrait" />
         <!-- 设置环信应用的AppKey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
@@ -29,6 +33,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
