@@ -31,16 +31,59 @@ import meng.customerservice.easeui.EmptyEMMessageListener;
 public class CustomerServiceManager {
     private static final String TAG = CustomerServiceManager.class.getSimpleName();
     private static CustomerServiceManager instance = new CustomerServiceManager();
+    private Context appContext;
+    private Handler mainHandler;
+    private EaseNotifier easeNotifier;
+    private String userAvatarUrl;
+    /**
+     * 用来记录注册了eventListener的foreground Activity
+     */
+    private List<Activity> activityList = new ArrayList<>();
+    /**
+     * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处理 activityList.size() <= 0
+     * 意味着所有页面都已经在后台运行，或者已经离开Activity Stack
+     */
+    protected EMMessageListener globalMessageListener = new EmptyEMMessageListener() {
+        @Override
+        public void onMessageReceived(List<EMMessage> list) {
+            if (!hasForegroundActivities()) {
+                for (EMMessage message : list) {
+                    easeNotifier.onNewMsg(message);
+                }
+            }
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> list) {
+            for (EMMessage message : list) {
+                EMLog.d(TAG, "收到透传消息");
+                EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
+                final String action = cmdMsgBody.action();// 获取自定义action
+                EMLog.d(TAG,
+                        String.format("透传消息：action:%s,message:%s", action, message.toString()));
+                // TODO(mwang): 16/8/1 暂时不清楚有什么应用
+            }
+        }
+    };
+    private EMConnectionListener connectionListener = new EMConnectionListener() {
+        @Override
+        public void onDisconnected(int error) {
+            if (error == EMError.USER_REMOVED) {
+                onCurrentAccountRemoved();
+            } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                onConnectionConflict();
+            }
+        }
+
+        @Override
+        public void onConnected() {}
+    };
+
+    private CustomerServiceManager() {}
 
     public static CustomerServiceManager getInstance() {
         return instance;
     }
-
-    private Context appContext;
-    private Handler mainHandler;
-    private EaseNotifier easeNotifier;
-
-    private CustomerServiceManager() {}
 
     public EaseNotifier getNotifier() {
         return easeNotifier;
@@ -56,9 +99,8 @@ public class CustomerServiceManager {
         if (isLoggedIn()) {
             EMClient.getInstance().chatManager().loadAllConversations();
         }
-        // TODO(mwang): 16/8/1 设置客服昵称头像,全局监听等
         EMClient.getInstance().addConnectionListener(connectionListener);
-        EMClient.getInstance().chatManager().addMessageListener(messageListener);
+        EMClient.getInstance().chatManager().addMessageListener(globalMessageListener);
     }
 
     protected EMOptions getDefaultChatOptions() {
@@ -83,18 +125,19 @@ public class CustomerServiceManager {
         }
     }
 
+    public void setUserAvatarUrl(String url) {
+        userAvatarUrl = url;
+    }
+
+    public String getUserAvatarUrl() {
+        return userAvatarUrl;
+    }
+
     public boolean isLoggedIn() {
         return EMClient.getInstance().isLoggedInBefore();
     }
 
-    public interface LoginListener {
-        void onSuccess();
-
-        void onFail(String errorMsg);
-    }
-
     public void login(String uname, String upwd, final LoginListener loginListener) {
-        // TODO(mwang): 16/8/1 login
         EMClient.getInstance().login(uname, upwd, new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -132,11 +175,6 @@ public class CustomerServiceManager {
         EMClient.getInstance().logout(true/* 解绑GCM或者小米推送的token */);
     }
 
-    /**
-     * 用来记录注册了eventlistener的foreground Activity
-     */
-    private List<Activity> activityList = new ArrayList<Activity>();
-
     public void addActivity(Activity activity) {
         if (!activityList.contains(activity)) {
             activityList.add(0, activity);
@@ -150,47 +188,6 @@ public class CustomerServiceManager {
     public boolean hasForegroundActivities() {
         return activityList.size() != 0;
     }
-
-    private EMConnectionListener connectionListener = new EMConnectionListener() {
-        @Override
-        public void onDisconnected(int error) {
-            if (error == EMError.USER_REMOVED) {
-                onCurrentAccountRemoved();
-            } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-                onConnectionConflict();
-            }
-        }
-
-        @Override
-        public void onConnected() {}
-    };
-
-    /**
-     * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处理 activityList.size() <= 0
-     * 意味着所有页面都已经在后台运行，或者已经离开Activity Stack
-     */
-    protected EMMessageListener messageListener = new EmptyEMMessageListener() {
-        @Override
-        public void onMessageReceived(List<EMMessage> list) {
-            if (!hasForegroundActivities()) {
-                for (EMMessage message : list) {
-                    easeNotifier.onNewMsg(message);
-                }
-            }
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> list) {
-            for (EMMessage message : list) {
-                EMLog.d(TAG, "收到透传消息");
-                EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
-                final String action = cmdMsgBody.action();// 获取自定义action
-                EMLog.d(TAG,
-                        String.format("透传消息：action:%s,message:%s", action, message.toString()));
-                // TODO(mwang): 16/8/1 暂时不清楚有什么应用
-            }
-        }
-    };
 
     /**
      * 账号在别的设备登录
@@ -206,4 +203,9 @@ public class CustomerServiceManager {
         Toast.makeText(appContext, "环信帐号被移除!", Toast.LENGTH_SHORT).show();
     }
 
+    public interface LoginListener {
+        void onSuccess();
+
+        void onFail(String errorMsg);
+    }
 }

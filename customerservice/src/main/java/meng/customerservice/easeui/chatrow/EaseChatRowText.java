@@ -89,8 +89,6 @@ public class EaseChatRowText extends EaseChatRow {
 
     @Override
     protected void onBubbleClick() {
-        // TODO Auto-generated method stub
-
     }
 
 }

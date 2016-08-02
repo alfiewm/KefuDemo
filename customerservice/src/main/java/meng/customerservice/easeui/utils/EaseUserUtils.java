@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import com.squareup.picasso.Picasso;
 
+import meng.customerservice.CustomerServiceManager;
 import meng.customerservice.R;
 import meng.customerservice.utils.CircleTransform;
 
@@ -20,8 +21,7 @@ public class EaseUserUtils {
             Picasso.with(context).load(R.drawable.cs_customer_service).into(imageView);
         } else {
             Picasso.with(context)
-                    // TODO(mwang): 16/8/1 get from host project 
-                    .load("http://thesource.com/wp-content/uploads/2015/02/Pablo_Picasso1.jpg")
+                    .load(CustomerServiceManager.getInstance().getUserAvatarUrl())
                     .placeholder(R.drawable.cs_my_avatar_default_round)
                     .centerCrop()
                     .resize(100, 100)

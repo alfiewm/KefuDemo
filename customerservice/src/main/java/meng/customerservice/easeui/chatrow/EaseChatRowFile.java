@@ -126,7 +126,6 @@ public class EaseChatRowFile extends EaseChatRow {
                 EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(),
                         message.getMsgId());
             } catch (HyphenateException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

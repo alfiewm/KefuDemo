@@ -24,6 +24,7 @@ public class DemoApplication extends Application {
         instance = this;
         // TODO(mwang): 16/7/31 判断在主进程,防止初始化两次
         CustomerServiceManager.getInstance().init(this, true);
+        CustomerServiceManager.getInstance().setUserAvatarUrl("http://thesource.com/wp-content/uploads/2015/02/Pablo_Picasso1.jpg");
     }
 
 }
