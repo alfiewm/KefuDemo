@@ -7,16 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.ClipboardManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMMessageListener;
@@ -59,7 +61,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     private boolean isMessageListInited;
 
     private EditText inputTextView;
-    private Button sendBtn;
+    private TextView sendBtn;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -79,18 +81,14 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
-        inputTextView = (EditText) rootView.findViewById(R.id.text_input);
-        sendBtn = (Button) rootView.findViewById(R.id.send_btn);
+        inputTextView = (EditText) rootView.findViewById(R.id.input_text);
+        inputTextView.addTextChangedListener(textWatcher);
+        sendBtn = (TextView) rootView.findViewById(R.id.send_btn);
         sendBtn.setOnClickListener(this);
+        rootView.findViewById(R.id.choose_pic).setOnClickListener(this);
         return rootView;
     }
 
@@ -115,14 +113,27 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                 .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            sendBtn.setEnabled(s != null && s.length() > 0);
+        }
+    };
+
     protected void setUpView() {
         // TODO(mwang): 16/7/31 标题设置
-        onConversationInit();
-        onMessageListInit();
+        initConversation();
+        initMessageList();
         setRefreshLayoutListener();
     }
 
-    protected void onConversationInit() {
+    protected void initConversation() {
         // 获取当前conversation对象
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername,
                 EaseCommonUtils.getConversationType(chatType), true);
@@ -142,7 +153,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    protected void onMessageListInit() {
+    protected void initMessageList() {
         messageList.init(toChatUsername, chatType, new EaseCustomChatRowProvider(getActivity()));
         // 设置list item里的控件的点击事件
         setListItemClickListener();
@@ -301,9 +312,13 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.send_btn && !TextUtils.isEmpty(inputTextView.getText())) {
-            sendTextMessage(inputTextView.getText().toString());
-            inputTextView.setText("");
+        if (v.getId() == R.id.send_btn) {
+            if (!TextUtils.isEmpty(inputTextView.getText())) {
+                sendTextMessage(inputTextView.getText().toString());
+                inputTextView.setText("");
+            }
+        } else if (v.getId() == R.id.choose_pic) {
+            // TODO(mwang): 16/8/2 choose pic
         }
     }
 

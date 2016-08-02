@@ -1,35 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hyphenate="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="#f2f0eb">
+    android:background="#f2f0eb"
+    android:orientation="vertical">
+
+    <meng.customerservice.easeui.EaseChatMessageList
+        android:id="@+id/message_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#dcdcdc" />
 
     <LinearLayout
         android:id="@+id/input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/text_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/send_btn"
+        <ImageView
+            android:id="@+id/choose_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="发送" />
+            android:padding="10dp"
+            android:src="@drawable/cs_selector_camera" />
+
+        <EditText
+            android:id="@+id/input_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/cs_bg_input_text"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:textColor="#333333"
+            android:textSize="15sp"
+            tools:text="教材到哪儿了" />
+
+        <TextView
+            android:id="@+id/send_btn"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/cs_bg_send_btn"
+            android:enabled="false"
+            android:gravity="center"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:text="发送"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
     </LinearLayout>
-
-    <meng.customerservice.easeui.EaseChatMessageList
-        android:id="@+id/message_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/input_container" />
-
-</RelativeLayout>
+</LinearLayout>
