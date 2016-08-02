@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
@@ -25,8 +24,8 @@ import meng.customerservice.easeui.utils.EaseCommonUtils;
  */
 public class ChatRowTransferToKefu extends EaseChatRow {
 
-    Button btnTransfer;
-    TextView tvContent;
+    TextView btnTransfer;
+    TextView tvTitle;
     String uuid = null;
     String serviceSessionId = null;
 
@@ -44,20 +43,19 @@ public class ChatRowTransferToKefu extends EaseChatRow {
 
     @Override
     protected void onFindViewById() {
-        btnTransfer = (Button) findViewById(R.id.btn_transfer);
-        tvContent = (TextView) findViewById(R.id.tv_chatcontent);
+        btnTransfer = (TextView) findViewById(R.id.desc);
+        tvTitle = (TextView) findViewById(R.id.tv_chatcontent);
     }
 
     @Override
     protected void onUpdateView() {
-
     }
 
     @Override
     protected void onSetUpView() {
         if (message.getType() == EMMessage.Type.TXT) {
             EMTextMessageBody msgBody = (EMTextMessageBody) message.getBody();
-            tvContent.setText(msgBody.getMessage());
+            tvTitle.setText(msgBody.getMessage());
         }
         if (btnTransfer == null) {
             return;
