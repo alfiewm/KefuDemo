@@ -1,7 +1,6 @@
 package meng.wwbo;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +14,7 @@ import com.hyphenate.chat.EMMessage;
 
 import java.util.List;
 
-import meng.customerservice.ChatActivity;
 import meng.customerservice.CustomerServiceManager;
-import meng.customerservice.easeui.EaseConstant;
 import meng.customerservice.easeui.EmptyEMMessageListener;
 import meng.customerservice.easeui.utils.EaseCommonUtils;
 
@@ -47,9 +44,9 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.contact_kefu) {
-            gotoConversation("[咨询] 高三物理尖子班XXD");
+            gotoConversationDetail("[咨询] 高三物理尖子班XXD");
         } else if (v.getId() == R.id.conversation_container) {
-            gotoConversation("");
+            gotoConversationDetail("");
         }
     }
 
@@ -111,9 +108,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void gotoConversation(String autoMessage) {
-        Intent intent = new Intent(HomeActivity.this, ChatActivity.class);
-        intent.putExtra(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, autoMessage);
-        startActivity(intent);
+    private void gotoConversationDetail(String contextMessage) {
+        CustomerServiceManager.launchConversationDetail(this, contextMessage);
     }
 }

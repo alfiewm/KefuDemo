@@ -2,6 +2,7 @@ package meng.customerservice;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import meng.customerservice.easeui.EaseConstant;
 import meng.customerservice.easeui.EaseNotifier;
 import meng.customerservice.easeui.EmptyEMMessageListener;
 
@@ -38,12 +40,13 @@ public class CustomerServiceManager {
     /**
      * 用来记录注册了eventListener的foreground Activity
      */
-    private List<Activity> activityList = new ArrayList<>();
+    private List<Activity> msgListenerForegroundActivities = new ArrayList<>();
     /**
-     * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处理 activityList.size() <= 0
+     * 全局事件监听 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处理
+     * msgListenerForegroundActivities.size() <= 0
      * 意味着所有页面都已经在后台运行，或者已经离开Activity Stack
      */
-    protected EMMessageListener globalMessageListener = new EmptyEMMessageListener() {
+    private EMMessageListener globalMessageListener = new EmptyEMMessageListener() {
         @Override
         public void onMessageReceived(List<EMMessage> list) {
             if (!hasForegroundActivities()) {
@@ -69,9 +72,9 @@ public class CustomerServiceManager {
         @Override
         public void onDisconnected(int error) {
             if (error == EMError.USER_REMOVED) {
-                onCurrentAccountRemoved();
+                showToast("环信帐号被移除!");
             } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-                onConnectionConflict();
+                showToast("环信帐号在别的设备登录");
             }
         }
 
@@ -103,7 +106,7 @@ public class CustomerServiceManager {
         EMClient.getInstance().chatManager().addMessageListener(globalMessageListener);
     }
 
-    protected EMOptions getDefaultChatOptions() {
+    private EMOptions getDefaultChatOptions() {
         EMOptions options = new EMOptions();
         options.setAcceptInvitationAlways(false);
         options.setRequireAck(false); // 已读回执
@@ -175,36 +178,31 @@ public class CustomerServiceManager {
         EMClient.getInstance().logout(true/* 解绑GCM或者小米推送的token */);
     }
 
+    public static void launchConversationDetail(Context context, String contextMessage) {
+        if (context == null) {
+            return;
+        }
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra(EaseConstant.EXTRA_CONTEXT_TEXT_MESSAGE, contextMessage);
+        context.startActivity(intent);
+    }
+
     public void addActivity(Activity activity) {
-        if (!activityList.contains(activity)) {
-            activityList.add(0, activity);
+        if (!msgListenerForegroundActivities.contains(activity)) {
+            msgListenerForegroundActivities.add(0, activity);
         }
     }
 
     public void removeActivity(Activity activity) {
-        activityList.remove(activity);
+        msgListenerForegroundActivities.remove(activity);
     }
 
     public boolean hasForegroundActivities() {
-        return activityList.size() != 0;
+        return msgListenerForegroundActivities.size() != 0;
     }
 
-    /**
-     * 账号在别的设备登录
-     */
-    protected void onConnectionConflict() {
-        postToast("环信帐号在别的设备登录");
-    }
-
-    /**
-     * 账号被移除
-     */
-    protected void onCurrentAccountRemoved() {
-        postToast("环信帐号被移除!");
-    }
-
-    private void postToast(final String msg) {
-        if (activityList.size() < 0) {
+    private void showToast(final String msg) {
+        if (msgListenerForegroundActivities.size() < 0) {
             return;
         }
         mainHandler.post(new Runnable() {
