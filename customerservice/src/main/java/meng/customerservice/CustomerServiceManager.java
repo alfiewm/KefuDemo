@@ -99,7 +99,7 @@ public class CustomerServiceManager {
         setDebugMode(debugMode);
         this.appContext = context;
         mainHandler = new Handler(Looper.getMainLooper());
-        if (isLoggedIn()) {
+        if (EMClient.getInstance().isLoggedInBefore()) {
             EMClient.getInstance().chatManager().loadAllConversations();
         }
         EMClient.getInstance().addConnectionListener(connectionListener);
@@ -111,6 +111,7 @@ public class CustomerServiceManager {
         options.setAcceptInvitationAlways(false);
         options.setRequireAck(false); // 已读回执
         options.setRequireDeliveryAck(false);
+        options.setAutoLogin(false); // 不要自动登陆
         return options;
     }
 
@@ -137,7 +138,7 @@ public class CustomerServiceManager {
     }
 
     public boolean isLoggedIn() {
-        return EMClient.getInstance().isLoggedInBefore();
+        return EMClient.getInstance().isLoggedInBefore() && EMClient.getInstance().isConnected();
     }
 
     public void login(String uname, String upwd, final LoginListener loginListener) {

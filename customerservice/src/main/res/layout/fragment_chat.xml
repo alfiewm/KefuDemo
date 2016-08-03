@@ -37,8 +37,10 @@
             android:layout_height="match_parent"
             android:layout_gravity="right|center_vertical"
             android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="12dp"
             android:paddingTop="10dp"
-            android:src="@drawable/cs_my_avatar_default_round" />
+            android:src="@drawable/cs_selector_phone" />
     </FrameLayout>
 
     <meng.customerservice.easeui.EaseChatMessageList

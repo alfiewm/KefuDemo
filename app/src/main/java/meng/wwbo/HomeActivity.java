@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
@@ -17,6 +16,7 @@ import java.util.List;
 import meng.customerservice.CustomerServiceManager;
 import meng.customerservice.easeui.EmptyEMMessageListener;
 import meng.customerservice.easeui.utils.EaseCommonUtils;
+import meng.wwbo.easeui.CustomerServiceHelper;
 
 public class HomeActivity extends Activity implements View.OnClickListener {
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -36,9 +36,7 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         unreadCountView = (TextView) findViewById(R.id.unread_count);
         btnContactKefu.setOnClickListener(this);
         conversationContainer.setOnClickListener(this);
-        if (!CustomerServiceManager.getInstance().isLoggedIn()) {
-            loginHuanxinServer();
-        }
+        CustomerServiceHelper.ensuerCustomerServiceConnected(this);
     }
 
     @Override
@@ -48,22 +46,6 @@ public class HomeActivity extends Activity implements View.OnClickListener {
         } else if (v.getId() == R.id.conversation_container) {
             gotoConversationDetail("");
         }
-    }
-
-    public void loginHuanxinServer() {
-        CustomerServiceManager.getInstance().login("dluffy", "222222",
-                new CustomerServiceManager.LoginListener() {
-                    @Override
-                    public void onSuccess() {
-                        renderConversationViews();
-                    }
-
-                    @Override
-                    public void onFail(String errorMsg) {
-                        Toast.makeText(HomeActivity.this, "登陆环信服务器失败", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
     }
 
     @Override
@@ -109,6 +91,6 @@ public class HomeActivity extends Activity implements View.OnClickListener {
     }
 
     private void gotoConversationDetail(String contextMessage) {
-        CustomerServiceManager.launchConversationDetail(this, contextMessage);
+        CustomerServiceHelper.contactOnlineCustomerService(this, contextMessage);
     }
 }
